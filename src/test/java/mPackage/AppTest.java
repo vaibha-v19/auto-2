@@ -5,6 +5,7 @@ import static org.testng.Assert.assertEquals;
 import java.time.Duration;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -20,12 +21,31 @@ public class AppTest {
 
     @BeforeClass
     public void setup() {
-        
-        WebDriverManager.chromedriver().setup();
-        driver = new ChromeDriver();
-        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
-        home = new Home(driver); // Initialize the Home object
+        try {
+            System.out.println("Setting up WebDriver...");
+            WebDriverManager.chromedriver().setup();
+
+            // Add Chrome options
+            ChromeOptions options = new ChromeOptions();
+            options.addArguments("--disable-extensions"); // Disable extensions
+            options.addArguments("--headless"); // Run in headless mode (no GUI)
+            options.addArguments("--no-sandbox"); // Bypass OS security model
+            options.addArguments("--disable-dev-shm-usage"); // Overcome limited resource problems
+            options.addArguments("--user-data-dir=/tmp/chrome-user-data"); // Use a unique user data directory
+
+            driver = new ChromeDriver(options);
+            driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+            System.out.println("WebDriver initialized successfully.");
+
+            System.out.println("Initializing Home object...");
+            home = new Home(driver); // Initialize the Home object
+            System.out.println("Home object initialized successfully.");
+        } catch (Exception e) {
+            System.err.println("Error during setup: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
+
 
     @Test
     public void SampleAutomation() {
