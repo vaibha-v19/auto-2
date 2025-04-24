@@ -21,18 +21,31 @@ public class Home {
 
     // Method to get the dropdown element
     public WebElement dropDown() {
+        System.out.println("Locating dropdown element...");
         return driver.findElement(dropDown);
     }
 
     // Method to select an option from the dropdown
     public void selectFromDropDown(String visibleText) {
-        Select dropdown = new Select(dropDown());
-        dropdown.selectByVisibleText(visibleText);
+        try {
+            System.out.println("Selecting option: " + visibleText);
+            Select dropdown = new Select(dropDown());
+            dropdown.selectByVisibleText(visibleText);
+        } catch (Exception e) {
+            System.err.println("Error selecting option from dropdown: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     // Method to perform double-click on the button
     public void doubleClickButton() {
-        Actions actions = new Actions(driver);
-        actions.doubleClick(driver.findElement(doubleClickButton)).perform();
+        try {
+            System.out.println("Performing double-click on the button...");
+            Actions actions = new Actions(driver);
+            actions.doubleClick(driver.findElement(doubleClickButton)).perform();
+        } catch (Exception e) {
+            System.err.println("Error performing double-click: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 }
