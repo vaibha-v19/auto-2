@@ -28,52 +28,45 @@ public class AppTest {
     }
 
     @Test
-    public void SampleAutomation() {
-        try {
-            // Navigate to the login page
-            driver.get("https://omayo.blogspot.com/");
+public void SampleAutomation() {
+    try {
+        System.out.println("Navigating to the website...");
+        driver.get("https://omayo.blogspot.com/");
+        driver.manage().window().maximize();
 
-            // Maximize the browser window
-            driver.manage().window().maximize();
+        System.out.println("Waiting for the dropdown to be visible...");
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        wait.until(ExpectedConditions.visibilityOf(home.dropDown()));
 
-            // Create an instance of WebDriverWait
-            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-            wait.until(ExpectedConditions.visibilityOf(home.dropDown()));
+        System.out.println("Selecting 'Older Newsletters' from the dropdown...");
+        home.selectFromDropDown("Older Newsletters");
 
-            // Select options from the dropdown
-            home.selectFromDropDown("Older Newsletters");
+        Select dropdown = new Select(home.dropDown());
+        String selectedOptionText = dropdown.getFirstSelectedOption().getText();
+        System.out.println("Selected option text: " + selectedOptionText);
+        assertEquals(selectedOptionText, "Older Newsletters", "The selected option is not as expected!");
 
-            // Create a Select object to interact with the dropdown
-            Select dropdown = new Select(home.dropDown());
+        System.out.println("Selecting additional options...");
+        home.selectFromDropDown("doc 1");
+        home.selectFromDropDown("doc 2");
 
-            // Verify the selected option
-            String selectedOptionText = dropdown.getFirstSelectedOption().getText(); // Get the text of the selected option
-            System.out.println("Selected option text: " + selectedOptionText); // Debugging output
-            assertEquals(selectedOptionText, "Older Newsletters", "The selected option is not as expected!"); // Check against the expected text
+        System.out.println("Performing double-click action...");
+        home.doubleClickButton();
 
-            // Select additional options
-            home.selectFromDropDown("doc 1");
-            home.selectFromDropDown("doc 2");
+        System.out.println("Waiting for the alert to be present...");
+        wait.until(ExpectedConditions.alertIsPresent());
+        String alertText = driver.switchTo().alert().getText();
+        System.out.println("Alert text: " + alertText);
+        driver.switchTo().alert().accept();
 
-            // Perform double-click action
-            home.doubleClickButton();
+        assertEquals(alertText, "Double Click Successful", "Alert text is not as expected!");
 
-            // Wait for the alert to be present and accept it
-            wait.until(ExpectedConditions.alertIsPresent());
-            String alertText = driver.switchTo().alert().getText(); // Get the alert text
-            System.out.println("Alert text: " + alertText); // Debugging output
-            driver.switchTo().alert().accept(); // Click OK on the alert
-
-            // Verify the alert text
-            assertEquals(alertText, "Double Click Successfull", "Alert text is not as expected!"); // Update to match the actual alert text
-
-            // If you reach this point without exceptions, the test is successful
-            System.out.println("Test executed successfully.");
-        } catch (Exception e) {
-            System.err.println("An error occurred during the test execution: " + e.getMessage());
-            e.printStackTrace(); // Print the stack trace for debugging
-        }
+        System.out.println("Test executed successfully.");
+    } catch (Exception e) {
+        System.err.println("An error occurred during the test execution: " + e.getMessage());
+        e.printStackTrace();
     }
+}
     @AfterClass
     public void tearDown() {
         // Close the browser
